@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "braille.h"
+#include "translator.h"
 // braille -t input.txt output.brl
 
 
@@ -31,6 +32,12 @@ int main(int argc, char *argv[])
         printf("Output: %s\n", argv[3]);
 
         // there will be call func translate_text()
+        printf("Test translation:\n");
+        char test_word[] = "hello";
+        for(int i = 0; i < 5; i++){
+            printf("%c -> %02X\n", test_word[i], char_to_braille(test_word[i]));
+        }
+
 
     } else if (strcmp(argv[1], "-p") == 0) {
         printf("Mode: Printing (Braille -> Screen)\n");

@@ -4,7 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.c
+        main.c \
+        translator.c
 
 HEADERS += \
-    braille.h
+    braille.h \
+    translator.h
