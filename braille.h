@@ -5,6 +5,8 @@
 
 // Header struct
 // Takes memory sequentially
+// u - unsigned 0+
+//_t - type
 typedef struct {
     char magic[4];       // 4 bytes: identifer (example., "BRL1")
     uint8_t version;     // 1 byte: format version

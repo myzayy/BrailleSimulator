@@ -2,6 +2,7 @@
 #include <string.h>
 #include "braille.h"
 #include "translator.h"
+#include "file_ops.h"
 // braille -t input.txt output.brl
 
 
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+
     // Check first argument (flag)
     // strcmp compare two strings.
     if (strcmp(argv[1], "-t") == 0) {
@@ -32,10 +34,14 @@ int main(int argc, char *argv[])
         printf("Output: %s\n", argv[3]);
 
         // there will be call func translate_text()
-        printf("Test translation:\n");
-        char test_word[] = "hello";
-        for(int i = 0; i < 5; i++){
-            printf("%c -> %02X\n", test_word[i], char_to_braille(test_word[i]));
+        // printf("Test translation:\n");
+        // char test_word[] = "hello";
+        // for(int i = 0; i < 5; i++){
+        //     printf("%c -> %02X\n", test_word[i], char_to_braille(test_word[i]));
+        // }
+
+        if(process_file(argv[2], argv[3]) != 0){
+            return 1;
         }
 
 
@@ -44,6 +50,7 @@ int main(int argc, char *argv[])
         printf("Input file: %s\n", argv[2]);
 
         // there will be call func print_braille()
+
 
     } else {
         printf("Error: Unknown parameter %s\n", argv[1]);

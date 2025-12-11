@@ -1,5 +1,6 @@
 #include "translator.h"
 #include <ctype.h>
+#include <stdio.h>
 
 static const uint8_t BRAILLE_ALPHABET[26] = {
     0x01, // a (1)
@@ -31,20 +32,43 @@ static const uint8_t BRAILLE_ALPHABET[26] = {
 
 };
 
-uint8_t char_to_braille(char c) {
+int char_to_braille(char c, uint8_t *buffer) {
     // if it space return 0 empty cell
-    if (c == ' '){
-        return 0x00;
+    int count = 0;
+    if (isdigit(c)){
+        buffer[count++] = BRAILLE_NUMBER;
+
+        int index;
+        if(c == '0'){
+            index = 9; // 0 is j
+        } else{
+            index = c - '1';
+        }
+        buffer[count++] = BRAILLE_ALPHABET[index];
+        return count;
+
     }
 
+
     if (isalpha(c)){
+
+        if (isupper(c)) {
+            buffer[count++] = BRAILLE_CAPITAL;
+        }
+
         char lower_c = tolower(c);
         // int - 'a' to take 0-25 int
         int index = lower_c - 'a';
-        return BRAILLE_ALPHABET[index];
+        //printf("index: %d\n", index);
+        buffer[count++] = BRAILLE_ALPHABET[index];
+        return count;
+    }
+    if (c == ' '){
+        buffer[count++] = 0x00;
+        return count;
     }
 
-    return 0x00;
+    return 0;
 
 
 }
