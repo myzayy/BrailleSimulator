@@ -3,6 +3,8 @@
 #include "braille.h"
 #include "translator.h"
 #include "file_ops.h"
+#include "printer.h"
+
 // braille -t input.txt output.brl
 
 
@@ -21,7 +23,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-
+    // translation
     // Check first argument (flag)
     // strcmp compare two strings.
     if (strcmp(argv[1], "-t") == 0) {
@@ -34,6 +36,7 @@ int main(int argc, char *argv[])
         printf("Output: %s\n", argv[3]);
 
         // there will be call func translate_text()
+
         // printf("Test translation:\n");
         // char test_word[] = "hello";
         // for(int i = 0; i < 5; i++){
@@ -46,11 +49,20 @@ int main(int argc, char *argv[])
 
 
     } else if (strcmp(argv[1], "-p") == 0) {
+
+        if (argc < 3) {
+            printf("Error: Missing file argument for printing.\n");
+            return 1;
+        }
+
         printf("Mode: Printing (Braille -> Screen)\n");
         printf("Input file: %s\n", argv[2]);
 
         // there will be call func print_braille()
 
+        if (print_to_braille_file(argv[2]) != 0) {
+            return 1;
+        }
 
     } else {
         printf("Error: Unknown parameter %s\n", argv[1]);
