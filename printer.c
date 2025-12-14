@@ -3,6 +3,21 @@
 #include "printer.h"
 #include "braille.h"
 
+// braille word coun in one line
+// if line will be longer, he will move lower
+
+#define CHARS_PER_LINE 20
+
+int count_dots_in_byte(uint8_t byte) {
+    int count = 0;
+    for (int i = 0; i < 8; i++) {
+        if ((byte >> i) & 1) {
+            count++;
+        }
+    }
+    return count;
+}
+
 void print_byte_as_grid(uint8_t code) {
     // shorted write of if/else
     // (condition) ? (value if true) : (value if false)
@@ -47,20 +62,55 @@ int print_to_braille_file(const char *file_path){
     printf("Signature:  %.4s\n", header.magic);
     printf("Version:    %d\n", header.version);
     printf("Characters: %d\n", header.char_count);
-    printf("-----------------\n");
+    printf("---------------------------\n\n");
 
     // print braille
+    int total_dots = 0;
 
     fseek(file, sizeof(BrailleHeader), SEEK_SET);
-    uint8_t byte;
-    int index = 0;
+    uint8_t buffer[CHARS_PER_LINE];
+    size_t bytes_read;
 
     //read by 1 byte to end of file
-    while(fread(&byte, sizeof(uint8_t), 1, file) == 1) {
-        printf("\n[%d] Code: 0x%02X\n", index + 1, byte);
-        print_byte_as_grid(byte);
-        index++;
+    // while(fread(&byte, sizeof(uint8_t), 1, file) == 1) {
+    //     printf("\n[%d] Code: 0x%02X\n", index + 1, byte);
+    //     print_byte_as_grid(byte);
+    //     index++;
+    // }
+
+    while((bytes_read = fread(buffer, sizeof(uint8_t), CHARS_PER_LINE, file)) > 0) {
+
+        for(size_t i = 0; i < bytes_read; i++){
+            total_dots += count_dots_in_byte(buffer[i]);
+        }
+
+        for (size_t i = 0; i < bytes_read; i++) {
+            uint8_t code = buffer[i];
+            // 0x01 (bit 0), 0x08 (bit 3)
+            printf("%c%c ", (code & 0x01) ? 'O' : '.', (code & 0x08) ? 'O' : '.');
+        }
+        printf("\n");
+
+        for (size_t i = 0; i < bytes_read; i++) {
+            uint8_t code = buffer[i];
+            // 0x02 (bit 1), 0x10 (bit 4)
+            printf("%c%c ", (code & 0x02) ? 'O' : '.', (code & 0x10) ? 'O' : '.');
+        }
+        printf("\n");
+
+        for (size_t i = 0; i < bytes_read; i++) {
+            uint8_t code = buffer[i];
+            // 0x04 (bit 2), 0x20 (bit 5)
+            printf("%c%c ", (code & 0x04) ? 'O' : '.', (code & 0x20) ? 'O' : '.');
+        }
+        printf("\n\n");
     }
+
+    printf("---------------------------\n");
+    printf("Statistic:\n");
+    printf("Total characters:      %d\n", header.char_count);
+    printf("Total embossed dots:   %d\n", total_dots);
+    printf("---------------------------\n");
 
     fclose(file);
     return 0;
