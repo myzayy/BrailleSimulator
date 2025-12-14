@@ -40,6 +40,8 @@ int process_file(const char *input_path, const char *output_path) {
     uint32_t count = 0;
     //printf("DEBUG: Starting loop...\n");
 
+    uint32_t checksum = 0;
+
     //fgetc - get 1 char from file untill end of file
     while ((c = fgetc(in)) != EOF) {
         //printf("DEBUG CHAR: '%c' (code %d)\n", c, c);
@@ -55,9 +57,15 @@ int process_file(const char *input_path, const char *output_path) {
         //write one byte to output file
         //fwrite(&code, sizeof(uint8_t), 1, out);
         //count++;
+
+        for (int i = 0; i < bytes_written; i++) {
+            checksum += buffer[i];
+        }
+
     }
     // printf("DEBUG: Loop finished. Rewriting header...\n");
     header.char_count = count;
+    header.checksum = checksum;
 
     // fseek  file seek - serach/replace
     // fseek( file, how many move, from where start)
@@ -70,6 +78,6 @@ int process_file(const char *input_path, const char *output_path) {
     fclose(out);
 
     //finish
-    printf("Done! Converted %d characters.\n", count);
+    printf("Done! Converted %d characters. Checksum: %u\n", count, checksum);
     return 0;
 }

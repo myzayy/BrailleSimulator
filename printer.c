@@ -57,11 +57,12 @@ int print_to_braille_file(const char *file_path){
     }
 
     // print results
-
+    uint32_t calc_checksum = 0;
     printf("--- File info ---\n");
     printf("Signature:  %.4s\n", header.magic);
     printf("Version:    %d\n", header.version);
     printf("Characters: %d\n", header.char_count);
+    printf("Checksum:   %u\n", header.checksum);
     printf("---------------------------\n\n");
 
     // print braille
@@ -82,6 +83,7 @@ int print_to_braille_file(const char *file_path){
 
         for(size_t i = 0; i < bytes_read; i++){
             total_dots += count_dots_in_byte(buffer[i]);
+            calc_checksum += buffer[i];
         }
 
         for (size_t i = 0; i < bytes_read; i++) {
@@ -110,6 +112,19 @@ int print_to_braille_file(const char *file_path){
     printf("Statistic:\n");
     printf("Total characters:      %d\n", header.char_count);
     printf("Total embossed dots:   %d\n", total_dots);
+
+
+    // Integrity check
+    printf("Integrity check:       ");
+    if (calc_checksum == header.checksum) {
+        printf("PASSED (Checksum match: %u)\n", calc_checksum);
+
+    }
+    else {
+        printf("FAILED! (Expected %u, got %u)\n", header.checksum, calc_checksum);
+        return 1;
+    }
+
     printf("---------------------------\n");
 
     fclose(file);
