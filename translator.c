@@ -1,6 +1,7 @@
 #include "translator.h"
 #include <ctype.h>
 #include <stdio.h>
+#include "braille.h"
 
 static const uint8_t BRAILLE_ALPHABET[26] = {
     0x01, // a (1)
@@ -35,6 +36,12 @@ static const uint8_t BRAILLE_ALPHABET[26] = {
 int char_to_braille(char c, uint8_t *buffer) {
     // if it space return 0 empty cell
     int count = 0;
+
+    if (c == ' ' || c == '\n' || c == '\r') {
+        buffer[count++] = 0x00;
+        return count;
+    }
+
     if (isdigit(c)){
         buffer[count++] = BRAILLE_NUMBER;
 
@@ -63,9 +70,37 @@ int char_to_braille(char c, uint8_t *buffer) {
         buffer[count++] = BRAILLE_ALPHABET[index];
         return count;
     }
-    if (c == ' '){
-        buffer[count++] = 0x00;
-        return count;
+
+    switch (c) {
+        case ',':
+            buffer[count++] = 0x02; // dot 2
+            return count;
+        case ';':
+            buffer[count++] = 0x06; // dot 2, 3
+            return count;
+        case ':':
+            buffer[count++] = 0x12; // dot 2, 5
+            return count;
+        case '.':
+            buffer[count++] = 0x32; // dot 2, 5, 6
+            return count;
+        case '!':
+            buffer[count++] = 0x16; // dot 2, 3, 5
+            return count;
+        case '?':
+            buffer[count++] = 0x26; // dot 2, 3, 6 or 2, 6
+            return count;
+        case '-':
+            buffer[count++] = 0x24; // dot 3, 6
+            return count;
+        case '\"':
+        case '(':
+        case ')':
+            buffer[count++] = 0x36; // dot 2, 3, 5, 6
+            return count;
+        case '\'':
+            buffer[count++] = 0x04; // dot 3
+            return count;
     }
 
     return 0;

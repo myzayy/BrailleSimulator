@@ -2,7 +2,8 @@
 #define BRAILLE_H
 
 #include <stdint.h>
-
+#define BRAILLE_NUMBER  0x3C  // (dot 3, 4, 5, 6)
+#define BRAILLE_CAPITAL 0x20
 // Header struct
 // Takes memory sequentially
 // u - unsigned 0+
