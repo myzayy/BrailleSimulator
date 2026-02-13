@@ -64,7 +64,11 @@ int process_file(const char *input_path, const char *output_path) {
 
     }
     // printf("DEBUG: Loop finished. Rewriting header...\n");
+
+    // return count of bytes
     header.char_count = count;
+
+    // return sum of numeric code
     header.checksum = checksum;
 
     // fseek  file seek - serach/replace
@@ -78,6 +82,6 @@ int process_file(const char *input_path, const char *output_path) {
     fclose(out);
 
     //finish
-    printf("Done! Converted %d characters. Checksum: %u\n", count, checksum);
+    printf("Done! Converted %d characters (bytes). Checksum: %u\n", count, checksum);
     return 0;
 }

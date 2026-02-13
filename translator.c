@@ -34,8 +34,10 @@ static const uint8_t BRAILLE_ALPHABET[26] = {
 };
 
 int char_to_braille(char c, uint8_t *buffer) {
-    // if it space return 0 empty cell
+
     int count = 0;
+
+    // if it space return 0 empty cell
 
     if (c == ' ' || c == '\n' || c == '\r') {
         buffer[count++] = 0x00;
