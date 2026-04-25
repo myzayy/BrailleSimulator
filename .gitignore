@@ -52,3 +52,34 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+# Specific build folders (build)
+build/
+*/build/
+x64/
+x86/
+Debug/
+Release/
+
+# Temporary compilation files
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+
+# Executable files
+*.exe
+*.out
+*.app
+
+# Qt Creator / IDE files
+*.user
+*.user.*
+.vscode/
+.idea/
+
+# Windows temporary files
+Thumbs.db
+Desktop.ini
